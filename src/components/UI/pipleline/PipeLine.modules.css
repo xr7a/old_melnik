@@ -1,0 +1,21 @@
+.section-divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-right: 370px;
+    margin-left: 370px;
+}
+
+span {
+    font-family: "Poppins Medium", sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.line {
+    content: '';
+    flex: 1;
+    background-color: #F4F5F4;
+    height: 1px;
+}

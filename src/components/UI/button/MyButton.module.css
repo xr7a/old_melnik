@@ -1,0 +1,26 @@
+.myBtn {
+    width: 232px;
+    height: 60px;
+    border-radius: 8px;
+    font-family: "Poppins Medium", sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.ver1 {
+    border: 0;
+    background: #8053FF;
+    color: #FFFFFF;
+}
+
+.ver2 {
+    border: 1px solid #8053FF;
+    background: #FFFFFF;
+    color: #8053FF;
+}
+
+.head {
+    width: 121px;
+    height: 48px;
+    
+}
