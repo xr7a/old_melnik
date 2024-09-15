@@ -7,19 +7,19 @@
     cursor: pointer;
 }
 
-.ver1 {
+.ver-primary {
     border: 0;
     background: #8053FF;
     color: #FFFFFF;
 }
 
-.ver2 {
+.ver-secondary {
     border: 1px solid #8053FF;
     background: #FFFFFF;
     color: #8053FF;
 }
 
-.head {
+.inHeader {
     width: 121px;
     height: 48px;
     

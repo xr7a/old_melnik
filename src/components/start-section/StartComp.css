@@ -1,11 +1,3 @@
-h1 {
-    font-family: "Poppins Bold", sans-serif;
-    font-weight: 700;
-    font-size: 64px;
-    color: #23155B;
-    margin-bottom: 8px;
-}
-
 .container {
     margin: 0 250px 200px 250px;
     height: 596px;
@@ -14,18 +6,27 @@ h1 {
     align-items: center;
     justify-content: center;
     background-color: #FBFAFF;
-    background-image: url("../../img/bg.svg");
+    background-image: url("../../assets/bg.svg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
 }
+.text-heading {
+    font-family: "Poppins Bold", sans-serif;
+    font-weight: 700;
+    font-size: 64px;
+    color: #23155B;
+    margin-bottom: 40px;
+}
 
-p {
+
+.text-description {
     margin-top: 0;
     font-family: "Poppins Medium", sans-serif;
     font-weight: 500;
     font-size: 24px;
     color: #23155B;
+    margin-bottom: 40px;
 }
 
 .buttons {
