@@ -24,12 +24,20 @@ export default tseslint.config({
   },
 })
 ```
-
 - Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
 - Optionally add `...tseslint.configs.stylisticTypeChecked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
 ```js
+"tailwindCSS.includeLanguages": {
+  "html": "html",
+    "javascript": "javascript",
+    "css": "css"
+},
+"editor.quickSuggestions": {
+  "strings": true
+}
+
 // eslint.config.js
 import react from 'eslint-plugin-react'
 
