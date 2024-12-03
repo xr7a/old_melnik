@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  id                     String   @id @default(uuid())
-  email                  String   @unique
-  name                   String?
-  role                   Role     @default(Reader)
-  passwordHash           String
-  refreshToken           String?
-  posts                  Post[]   @relation("author")
-  likedPosts             Post[]   @relation("favorite")
+  id           String  @id @default(uuid())
+  email        String  @unique
+  name         String?
+  role         Role    @default(Reader)
+  passwordHash String
+  refreshToken String?
+  posts        Post[]  @relation("author")
+  likedPosts   Post[]  @relation("favorite")
 }
 
 model Post {
@@ -29,13 +29,13 @@ model Post {
   images         Image[]
   author         User?    @relation("author", fields: [authorId], references: [id])
   authorId       String?
-  likedBy        User?     @relation("favorite", fields: [likedById], references: [id])
+  likedBy        User?    @relation("favorite", fields: [likedById], references: [id])
   likedById      String?
 }
 
 model Image {
   id        String   @id @default(uuid())
-  imageUrl  String
+  imageUrl  String   @unique
   createdAt DateTime @default(now())
   postId    String
   post      Post     @relation(fields: [postId], references: [id])

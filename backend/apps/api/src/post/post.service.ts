@@ -98,6 +98,16 @@ export class PostService {
             throw new NotFoundException("post doesn`t exist");
         }
         await this.quotes.deleteFile(name);
+        await this.prisma.post.update({
+            where: {id: postId},
+            data: {
+                images: {
+                    delete: {
+                        imageUrl: name
+                    }
+                }
+            }
+        })
     }
 
     async GetPublishedPosts() {
