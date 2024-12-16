@@ -21,11 +21,6 @@ export class RegisterDto {
     email: string;
 
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    name: string;
-
-    @ApiProperty()
     @IsEnum(Role)
     @IsNotEmpty()
     role: Role;

@@ -9,11 +9,11 @@ export class FilesService {
     protected _bucketName = 'main';
     constructor(@InjectMinio() private readonly minioService: Minio.Client) { }
 
-    async bucketList(){
+    async bucketList() {
         return await this.minioService.listBuckets();
     }
 
-    async getFile(filename: string){
+    async getFile(filename: string) {
         return await this.minioService.presignedUrl(
             'GET',
             this._bucketName,
@@ -32,7 +32,7 @@ export class FilesService {
         return filename;
     }
 
-    async deleteFile(filename: string){
+    async deleteFile(filename: string) {
         return await this.minioService.removeObject(
             this._bucketName,
             filename

@@ -2,8 +2,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger"
 import { ValidationPipe } from '@nestjs/common';
+import * as fs from 'fs';
+import * as path from 'path';
 
 async function bootstrap() {
+  // const httpsOptions = {
+  //   key: fs.readFileSync(path.join(__dirname, '..', 'certificates', 'server.key')),
+  //   cert: fs.readFileSync(path.join(__dirname, '..', 'certificates', 'server.cert')),
+  // }
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
@@ -21,8 +27,8 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, document)
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: '*',  
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    origin: 'http://localhost:5173',  
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
   });
   await app.listen(process.env.PORT ?? 3000);
 }

@@ -1,7 +1,6 @@
 import { PrismaService } from '@app/db';
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, Req } from '@nestjs/common';
 import { createPostDto, updatePostDto } from './dto/post.dto';
-import { Request } from 'express';
 import { QuotesService } from '../quotes/quotes.service';
 
 @Injectable()
@@ -54,10 +53,10 @@ export class PostService {
 
     async addImageToPost(image: Express.Multer.File, id: string) {
         const post = await this.prisma.post.findUnique({
-            where: {id},
-            include: {images: true}
+            where: { id },
+            include: { images: true }
         });
-        if(!post){
+        if (!post) {
             throw new NotFoundException('post doesn`t exist');
         }
         const imageMinio = await this.quotes.uploadFile(image);
@@ -86,11 +85,11 @@ export class PostService {
 
     async deleteImageFromPost(postId: string, name: string) {
         const post = await this.prisma.post.findUnique({
-            where: {id: postId},
-            include: {images: true}
+            where: { id: postId },
+            include: { images: true }
         });
-        
-        if(!post.images.every(index => {index.imageUrl != name})) {
+
+        if (!post.images.every(index => { index.imageUrl != name })) {
             console.log('вот щас')
             throw new BadRequestException('Image doesn`t exist in this post');
         }
@@ -99,7 +98,7 @@ export class PostService {
         }
         await this.quotes.deleteFile(name);
         await this.prisma.post.update({
-            where: {id: postId},
+            where: { id: postId },
             data: {
                 images: {
                     delete: {
@@ -118,11 +117,9 @@ export class PostService {
         });
     }
 
-    async GetAuthorsPosts(id: string){
+    async GetAuthorsPosts(id: string) {
         return await this.prisma.post.findMany({
-            where: {authorId: id}
+            where: { authorId: id }
         });
     }
-
-
 }

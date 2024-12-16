@@ -4,7 +4,6 @@ import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDto {
     email: string;
-    name: string;
     role: Role;
     passwordHash: string;
     refreshToken?: string;
@@ -12,7 +11,6 @@ export class CreateUserDto {
 
 export class UpdateUserDto {
     email?: string;
-    name?: string;
     role?: Role;
     passwordHash?: string;
     refreshToken?: string;

@@ -5,7 +5,8 @@ import { QuotesModule } from '../quotes/quotes.module';
 
 @Module({
   imports: [QuotesModule],
-  providers: [PostService, ],
-  controllers: [PostController]
+  providers: [PostService],
+  controllers: [PostController],
+  exports: [PostService]
 })
 export class PostModule {}

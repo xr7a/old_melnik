@@ -1,10 +1,9 @@
-import { Body, Controller, Get, Param, Post, Req, SetMetadata, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res, SetMetadata, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
-import { Request } from "express";
-import { endWith } from 'rxjs';
+import { Request, Response } from "express";
 import { RoleGuard, Roles } from './guards/role.guard';
 
 @Controller('auth')
@@ -13,7 +12,7 @@ export class AuthController {
 
     @Post("register")
     async signup(@Body() data: RegisterDto) {
-        return this.authService.signUp(data);
+        return await this.authService.signUp(data);
     }
 
     @Post("login")
@@ -31,8 +30,8 @@ export class AuthController {
     @Get("refresh-token")
     async refreshTokens(@Req() req: Request) {
         const id = req.user['id'];
-        const refreshToken = req.user['refreshToken'];
-        await this.authService.refreshTokens(id, refreshToken)
+        const token = req.headers['authorization'].split(' ')[1];
+        return await this.authService.refreshTokens(id, token);
     }
 
     @Roles("Reader", "Author")

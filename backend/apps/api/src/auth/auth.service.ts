@@ -6,6 +6,7 @@ import * as argon2 from "argon2";
 import { Role } from '@prisma/client';
 import { CreateUserDto } from '../user/dto/user.dto';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,6 @@ export class AuthService {
         const passwordHash = await this.hashData(data.password);
         const user = await this.userService.create({ 
             email: data.email,
-            name: data.name, 
             role: data.role,
             passwordHash 
         });
@@ -70,21 +70,22 @@ export class AuthService {
             this.jwtService.signAsync(payload,
                 {
                     secret: this.configService.get<string>('JWT_SECRET'),
-                    expiresIn: "2h"
+                    expiresIn: "7d"
                 }
             ),
         ]);
         return { accessToken, refreshToken }
     }
 
-    async refreshTokens(id: string, refreshToken: string) {
+    async refreshTokens(id: string, refresh: string) {
         const user = await this.userService.findById(id);
-        if (!user || !refreshToken)
+        if (!user || !refresh)
             throw new ForbiddenException("Access Denied");
-        const refreshTokenMatches = await argon2.verify(user.refreshToken, refreshToken);
+        const refreshTokenMatches = await argon2.verify(user.refreshToken, refresh);
         if (!refreshTokenMatches)
              throw new ForbiddenException("Access Denied");
-        const tokens = await this.generateTokens(user.id, user.email, user.role);
-        await this.updateRefreshToken(user.id, tokens.refreshToken);
+        const {accessToken, refreshToken} = await this.generateTokens(user.id, user.email, user.role);
+        await this.updateRefreshToken(user.id, refreshToken);
+        return {accessToken, refreshToken}
     }
 }

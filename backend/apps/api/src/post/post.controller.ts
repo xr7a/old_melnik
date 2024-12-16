@@ -26,8 +26,10 @@ export class PostController {
         return await this.postService.addImageToPost(image, postId);
     }
 
+    @Roles('Author')
+    @UseGuards(AccessTokenGuard)
     @Delete(':postId/images/:imageId')
-    async DeleteImageFromPost(@Param('postId') postId: string, @Param('imageId') imageId: string){
+    async DeleteImageFromPost(@Param('postId') postId: string, @Param('imageId') imageId: string) {
         await this.postService.deleteImageFromPost(postId, imageId);
     }
 
@@ -38,10 +40,10 @@ export class PostController {
         return await this.postService.update(postId, updatePostDto);
     }
 
-    @Roles("Reader")
+    @Roles("Reader", "Author")
     @UseGuards(AccessTokenGuard)
     @Get()
-    async GetPosts() {
+    async GetPublishedPosts() {
         return await this.postService.GetPublishedPosts();
     }
 
@@ -52,5 +54,12 @@ export class PostController {
         return await this.postService.GetAuthorsPosts(req.user['id']);
     }
 
-    
+    @Roles("Author")
+    @UseGuards(AccessTokenGuard)
+    @Post(':postId/publish')
+    async PublishPost(id: string){
+        return await this.postService.publish(id);
+    }
+
+
 }

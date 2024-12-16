@@ -11,4 +11,4 @@ import { RoleGuard } from '../auth/guards/role.guard';
   providers: [QuotesService, AccessTokenStrategy, RefreshTokenStrategy, RoleGuard],
   exports: [QuotesService]
 })
-export class QuotesModule {}
+export class QuotesModule { }

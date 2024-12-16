@@ -4,6 +4,7 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from '@app/db';
 import { PostModule } from './post/post.module';
 import { QuotesModule } from './quotes/quotes.module';
+import { InteractionsModule } from './interactions/interactions.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { QuotesModule } from './quotes/quotes.module';
     AuthModule,
     PostModule,
     QuotesModule,
+    InteractionsModule,
   ],
 })
 export class AppModule { }

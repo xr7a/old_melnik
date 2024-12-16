@@ -23,7 +23,7 @@ export class FilesController {
     }
 
     @Delete('file-url/:name')
-    async deleteFile(@Param('name') name: string){
+    async deleteFile(@Param('name') name: string) {
         console.log(name, 'зашел сюда')
         await this.filesService.deleteFile(name);
     }

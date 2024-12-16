@@ -1,8 +1,15 @@
+import { Router } from './features/router/Router';
+import { AuthProvider } from './features/context/AuthContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 function App() {
-  return(
-    <div>
-      
-    </div>
+  const queryClient = new QueryClient();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 
