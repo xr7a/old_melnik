@@ -49,9 +49,15 @@ export class PostController {
 
     @Roles("Author")
     @UseGuards(AccessTokenGuard)
-    @Get()
-    async GetAuthorsPosts(@Req() req: Request) {
-        return await this.postService.GetAuthorsPosts(req.user['id']);
+    @Get("/my/published")
+    async GetAuthorsPublishedPosts(@Req() req: Request) {
+        return await this.postService.GetAuthorsPublishedPosts(req.user['id']);
+    }
+    @Roles("Author")
+    @UseGuards(AccessTokenGuard)
+    @Get("/my/draft")
+    async GetAuthorsDraftPosts(@Req() req: Request) {
+        return await this.postService.GetAuthorsDraftPosts(req.user['id']);
     }
 
     @Roles("Author")

@@ -1,9 +1,8 @@
 import axios from 'axios'
 import { AuthService } from './services/auth.service';
-import { useNavigate } from 'react-router-dom';
 
 const $api = axios.create({
-    baseURL: 'http://localhost:3000/',
+    baseURL: 'http://localhost:3000',
     headers: {
         'Content-Type': 'application/json',
     }
@@ -46,7 +45,6 @@ $api.interceptors.response.use(
                 return $api.request(error.config);
 
             } catch (e) {
-                console.log("БЛЯЯЯЯЯЯЯЯ");
                 localStorage.removeItem('token');
                 localStorage.removeItem('refresh');
                 window.location.href = '/auth';

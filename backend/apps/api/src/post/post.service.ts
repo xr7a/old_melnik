@@ -117,9 +117,20 @@ export class PostService {
         });
     }
 
-    async GetAuthorsPosts(id: string) {
+    async GetAuthorsPublishedPosts(id: string) {
         return await this.prisma.post.findMany({
-            where: { authorId: id }
+            where: {
+                authorId: id,
+                status: 'Published'
+            }
+        });
+    }
+    async GetAuthorsDraftPosts(id: string) {
+        return await this.prisma.post.findMany({
+            where: {
+                authorId: id,
+                status: 'Draft'
+            }
         });
     }
 }

@@ -32,7 +32,6 @@ export class AuthService {
     static async login(user: LoginData) {
         try {
             const response = await axios.post<Token>('http://localhost:3000/auth/login', user);
-            console.log('login', response.data.accessToken);
             localStorage.setItem("token", response.data.accessToken);
             localStorage.setItem("refresh", response.data.refreshToken);
         }

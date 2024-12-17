@@ -1,8 +1,10 @@
 import $api from "../instance";
 
 export interface Post {
+    id: string;
     title: string;
     content: string;
+    idempotencyKey?: string;
 }
 
 export class PostService {
@@ -18,6 +20,16 @@ export class PostService {
 
     static async getPublishedPosts(){
         const response = await $api.get('/posts');
+        return response.data;
+    }
+
+    static async getAuthorPublishedPosts(){
+        const response = await $api.get('/posts/my/published');
+        return response.data;
+    }
+
+    static async getAuthorDraftPost(){
+        const response = await $api.get('/posts/my/draft');
         return response.data;
     }
 }

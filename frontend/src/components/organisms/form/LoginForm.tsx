@@ -27,7 +27,7 @@ interface ILoginProps {
   setRegister: () => void;
 }
 export function LoginForm({ setRegister }: ILoginProps) {
-  const { login } = useAuth();
+  const { login, email} = useAuth();
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,6 +38,7 @@ export function LoginForm({ setRegister }: ILoginProps) {
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
     AuthService.login({ email: values.email, password: values.password });
+    console.log("email in login", email);
     login();
     navigate('/');
   }

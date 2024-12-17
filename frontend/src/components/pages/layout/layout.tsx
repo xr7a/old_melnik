@@ -8,6 +8,7 @@ interface ILayout {
 }
 
 function Layout({ children }: ILayout) {
+  console.log("нахуй")
   const {email} = useAuth();
   const location = useLocation();
   if (location.pathname === '/auth') {
