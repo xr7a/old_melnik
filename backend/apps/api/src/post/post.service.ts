@@ -109,24 +109,31 @@ export class PostService {
         })
     }
 
-    async GetPublishedPosts() {
+    async GetPublishedPosts(offset: number, limit: number) {
         return await this.prisma.post.findMany({
+            take: limit,
+            skip: offset,
             where: {
                 status: "Published"
             }
+
         });
     }
 
-    async GetAuthorsPublishedPosts(id: string) {
+    async GetAuthorsPublishedPosts(id: string, offset: number, limit: number) {
         return await this.prisma.post.findMany({
+            take: limit,
+            skip: offset,
             where: {
                 authorId: id,
                 status: 'Published'
             }
         });
     }
-    async GetAuthorsDraftPosts(id: string) {
+    async GetAuthorsDraftPosts(id: string, offset: number, limit: number) {
         return await this.prisma.post.findMany({
+            take: limit,
+            skip: offset,
             where: {
                 authorId: id,
                 status: 'Draft'

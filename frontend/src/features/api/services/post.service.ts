@@ -18,18 +18,18 @@ export class PostService {
         return response.data;
     }
 
-    static async getPublishedPosts(){
-        const response = await $api.get('/posts');
+    static async getPublishedPosts(page: number = 1, limit: number = 10){
+        const response = await $api.get(`/posts?page=${page}&limit=${limit}`);
         return response.data;
     }
 
-    static async getAuthorPublishedPosts(){
-        const response = await $api.get('/posts/my/published');
+    static async getAuthorPublishedPosts(page: number = 1, limit: number = 10){
+        const response = await $api.get(`/posts/my/published?page=${page}&limit=${limit}`);
         return response.data;
     }
 
-    static async getAuthorDraftPost(){
-        const response = await $api.get('/posts/my/draft');
+    static async getAuthorDraftPost(page: number = 1, limit: number = 10){
+        const response = await $api.get(`/posts/my/draft?page=${page}&limit=${limit}`);
         return response.data;
     }
 }

@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors, ValidationPipe, UsePipes } from '@nestjs/common';
 import { PostService } from './post.service';
 import { createPostDto, updatePostDto } from './dto/post.dto';
-import { Request } from 'express';
+import { query, Request } from 'express';
 import { Roles } from '../auth/guards/role.guard';
 import { AccessTokenGuard } from '../auth/guards/accessToken.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Controller('posts')
 export class PostController {
@@ -40,24 +41,35 @@ export class PostController {
         return await this.postService.update(postId, updatePostDto);
     }
 
+    @UsePipes(new ValidationPipe({ transform: true }))
     @Roles("Reader", "Author")
     @UseGuards(AccessTokenGuard)
     @Get()
-    async GetPublishedPosts() {
-        return await this.postService.GetPublishedPosts();
+    async GetPublishedPosts(@Query() query: PaginationDto) {
+        const {page = 1, limit = 10} = query;
+        const offset = (page - 1) * limit;
+        return await this.postService.GetPublishedPosts(offset, limit);
     }
 
+
+    @UsePipes(new ValidationPipe({ transform: true }))
     @Roles("Author")
     @UseGuards(AccessTokenGuard)
     @Get("/my/published")
-    async GetAuthorsPublishedPosts(@Req() req: Request) {
-        return await this.postService.GetAuthorsPublishedPosts(req.user['id']);
+    async GetAuthorsPublishedPosts(@Query() query: PaginationDto, @Req() req: Request) {
+        const {page = 1, limit = 10} = query;
+        const offset = (page - 1) * limit;
+        return await this.postService.GetAuthorsPublishedPosts(req.user['id'], offset, limit);
     }
+
+    @UsePipes(new ValidationPipe({ transform: true }))
     @Roles("Author")
     @UseGuards(AccessTokenGuard)
     @Get("/my/draft")
-    async GetAuthorsDraftPosts(@Req() req: Request) {
-        return await this.postService.GetAuthorsDraftPosts(req.user['id']);
+    async GetAuthorsDraftPosts(@Query() query: PaginationDto, @Req() req: Request) {
+        const {page = 1, limit = 10} = query;
+        const offset = (page - 1) * limit;
+        return await this.postService.GetAuthorsDraftPosts(req.user['id'], offset, limit);
     }
 
     @Roles("Author")

@@ -7,7 +7,7 @@ interface FetchResults<T> {
   error: string | null;
 }
 
-export function useFetch<T>(apiFunc: Promise<AxiosResponse<any, any>>): FetchResults<T> {
+export function useFetch<T>(apiFunc: Promise<AxiosResponse<any, any>>, option: any): FetchResults<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +28,7 @@ export function useFetch<T>(apiFunc: Promise<AxiosResponse<any, any>>): FetchRes
       }
     };
     fetchData();
-  }, []);
+  }, [option]);
 
   return {data, loading, error}
 }
