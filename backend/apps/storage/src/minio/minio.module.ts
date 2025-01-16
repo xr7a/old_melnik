@@ -16,7 +16,7 @@ import * as Minio from 'minio';
             ): Promise<Minio.Client> => {
                 const client = new Minio.Client({
                     endPoint: configService.getOrThrow("MINIO_ENDPOINT"),
-                    port: configService.getOrThrow("MINIO_PORT"),
+                    port: Number(configService.getOrThrow("MINIO_PORT")),
                     accessKey: configService.getOrThrow("MINIO_ACCESS_KEY"),
                     secretKey: configService.getOrThrow("MINIO_SECRET_KEY"),
                     useSSL: false,

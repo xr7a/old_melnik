@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors, ValidationPipe, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors, ValidationPipe, UsePipes } from '@nestjs/common';
 import { PostService } from './post.service';
 import { createPostDto, updatePostDto } from './dto/post.dto';
 import { query, Request } from 'express';
@@ -24,12 +24,13 @@ export class PostController {
     @UseInterceptors(FileInterceptor('file'))
     async AddImageToPost(@UploadedFile('file') image: Express.Multer.File, @Param('postId') postId: string) {
         console.log(image);
+        console.log(postId);
         return await this.postService.addImageToPost(image, postId);
     }
 
     @Roles('Author')
     @UseGuards(AccessTokenGuard)
-    @Delete(':postId/images/:imageId')
+    @Delete(':postId/images')
     async DeleteImageFromPost(@Param('postId') postId: string, @Param('imageId') imageId: string) {
         await this.postService.deleteImageFromPost(postId, imageId);
     }
@@ -37,8 +38,13 @@ export class PostController {
     @Roles('Author')
     @UseGuards(AccessTokenGuard)
     @Put(':postId')
-    async updatePost(@Param('postId') postId: string, updatePostDto: updatePostDto) {
+    async updatePost(@Param('postId') postId: string, @Body() updatePostDto: updatePostDto) {
         return await this.postService.update(postId, updatePostDto);
+    }
+
+    @Get(':postId')
+    async GetPost(@Param('postId') postId: string) {
+        return await this.postService.getPostById(postId);
     }
 
     @UsePipes(new ValidationPipe({ transform: true }))
@@ -46,7 +52,7 @@ export class PostController {
     @UseGuards(AccessTokenGuard)
     @Get()
     async GetPublishedPosts(@Query() query: PaginationDto) {
-        const {page = 1, limit = 10} = query;
+        const { page = 1, limit = 10 } = query;
         const offset = (page - 1) * limit;
         return await this.postService.GetPublishedPosts(offset, limit);
     }
@@ -57,7 +63,7 @@ export class PostController {
     @UseGuards(AccessTokenGuard)
     @Get("/my/published")
     async GetAuthorsPublishedPosts(@Query() query: PaginationDto, @Req() req: Request) {
-        const {page = 1, limit = 10} = query;
+        const { page = 1, limit = 10 } = query;
         const offset = (page - 1) * limit;
         return await this.postService.GetAuthorsPublishedPosts(req.user['id'], offset, limit);
     }
@@ -67,7 +73,7 @@ export class PostController {
     @UseGuards(AccessTokenGuard)
     @Get("/my/draft")
     async GetAuthorsDraftPosts(@Query() query: PaginationDto, @Req() req: Request) {
-        const {page = 1, limit = 10} = query;
+        const { page = 1, limit = 10 } = query;
         const offset = (page - 1) * limit;
         return await this.postService.GetAuthorsDraftPosts(req.user['id'], offset, limit);
     }
@@ -75,7 +81,7 @@ export class PostController {
     @Roles("Author")
     @UseGuards(AccessTokenGuard)
     @Post(':postId/publish')
-    async PublishPost(id: string){
+    async PublishPost(@Param('postId') id: string) {
         return await this.postService.publish(id);
     }
 

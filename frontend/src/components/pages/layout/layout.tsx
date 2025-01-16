@@ -8,8 +8,8 @@ interface ILayout {
 }
 
 function Layout({ children }: ILayout) {
-  console.log("нахуй")
-  const {email} = useAuth();
+  console.log('нахуй');
+  const { email } = useAuth();
   const location = useLocation();
   if (location.pathname === '/auth') {
     return <main>{children}</main>;
@@ -18,7 +18,7 @@ function Layout({ children }: ILayout) {
     <div className="flex flex-col justify-between h-dvh ">
       <Navbar email={email} />
       <main className="h-[95%] flex">
-        <Sidebar/>
+        <Sidebar />
         {children}
       </main>
     </div>

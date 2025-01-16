@@ -36,7 +36,12 @@ export class PostService {
 
     async getPostById(id: string) {
         return await this.prisma.post.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                image: true,
+                likes: true,
+                comments: true
+            }
         })
     }
 
@@ -54,59 +59,69 @@ export class PostService {
     async addImageToPost(image: Express.Multer.File, id: string) {
         const post = await this.prisma.post.findUnique({
             where: { id },
-            include: { images: true }
+            include: { image: true }
         });
-        if (!post) {
+        if (post == null) {
             throw new NotFoundException('post doesn`t exist');
         }
-        const imageMinio = await this.quotes.uploadFile(image);
-        await this.prisma.post.update({
-            where: { id },
-            data: {
-                images: {
-                    create: {
-                        imageUrl: imageMinio
+
+        if (post.image != null) {
+            await this.prisma.post.update({
+                where: { id },
+                data: {
+                    image: {
+                        delete: true
                     }
                 }
+            })
+        }
+        const imageMinio = await this.quotes.uploadFile(image);
+        console.log('imageMinio:', imageMinio);
+        const url = await this.getImageToPost(imageMinio);
+        console.log(url)
+        const newPost = await this.prisma.post.update({
+            where: { id },
+            data: {
+                image: {
+                    create: {
+                        imageUrl: url
+                    }
+                }
+            },
+            include: {
+                image: true
             }
         })
-        return imageMinio;
+        return newPost.image;
     }
 
-    async getImageToPost(postId: string, name: string) {
-        const post = await this.prisma.post.findUnique({
-            where: { id: postId }
-        });
-        if (!post) {
-            throw new NotFoundException("post doesn`t exist");
-        }
-        return this.quotes.getFile(name);
+    async getImageToPost(image) {
+        return this.quotes.getFile(image);
     }
 
     async deleteImageFromPost(postId: string, name: string) {
         const post = await this.prisma.post.findUnique({
             where: { id: postId },
-            include: { images: true }
+            include: { image: true }
         });
 
-        if (!post.images.every(index => { index.imageUrl != name })) {
+        if (!post.image.imageUrl) {
             console.log('вот щас')
             throw new BadRequestException('Image doesn`t exist in this post');
         }
         if (!post) {
             throw new NotFoundException("post doesn`t exist");
         }
-        await this.quotes.deleteFile(name);
+        await this.quotes.deleteFile(post.image.imageUrl);
         await this.prisma.post.update({
             where: { id: postId },
             data: {
-                images: {
-                    delete: {
-                        imageUrl: name
-                    }
+                image: {
+                    delete: true
                 }
             }
-        })
+        }
+        )
     }
 
     async GetPublishedPosts(offset: number, limit: number) {
@@ -115,6 +130,14 @@ export class PostService {
             skip: offset,
             where: {
                 status: "Published"
+            },
+            include: {
+                image: true,
+                likes: true,
+                comments: true
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
 
         });
@@ -127,6 +150,14 @@ export class PostService {
             where: {
                 authorId: id,
                 status: 'Published'
+            },
+            include: {
+                image: true,
+                likes: true,
+                comments: true
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         });
     }
@@ -137,6 +168,14 @@ export class PostService {
             where: {
                 authorId: id,
                 status: 'Draft'
+            },
+            include: {
+                image: true,
+                likes: true,
+                comments: true
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         });
     }

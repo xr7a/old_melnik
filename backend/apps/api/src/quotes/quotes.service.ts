@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { map } from 'rxjs/operators';
 import * as FormData from "form-data"
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -31,18 +31,17 @@ export class QuotesService {
         }
     }
 
-    getFile(name: string) {
+    async getFile(name: string): Promise<string> {
         try {
-            return this.http.get(`${this.configService.get<string>('MINIO_API_URL')}files/file-url/${name}`)
-                .pipe(
-                    map(response => response.data)
-                );
-        } catch (error) {
+            const url = `${this.configService.get<string>('MINIO_API_URL')}files/file-url/${name}`;
+            const response = await firstValueFrom(this.http.get<string>(url));
+            return response.data;
+          } catch (error) {
             if (error.message.includes('not found')) {
-                throw new NotFoundException('File doesn`t exist');
+              throw new NotFoundException('File doesn`t exist');
             }
             throw new InternalServerErrorException('Failed to retrieve file');
-        }
+          }
 
     }
 

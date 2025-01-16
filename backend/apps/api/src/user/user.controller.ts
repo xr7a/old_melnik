@@ -10,4 +10,10 @@ export class UserController {
     async GetMe() {
         return await this.userService.GetAll()
     }
+
+    @Get(':id')
+    async FindById(@Param('id') id: string){
+        const response = await this.userService.findById(id);
+        return response.email;
+    }
 }

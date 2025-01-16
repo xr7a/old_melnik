@@ -16,19 +16,20 @@ export function useFetch<T>(apiFunc: Promise<AxiosResponse<any, any>>, option: a
       setLoading(true);
       setError(null);
       try {
-          const response: any = await apiFunc;
-          if(!response){
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          setData(response);
-      } catch(e: any){
-          setError(e.message || "Something went wrong");
+        const response: any = await apiFunc;
+        console.log(response, "сука");
+        if (!response) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        setData(response);
+      } catch (e: any) {
+        setError(e.message || "Something went wrong");
       } finally {
-          setLoading(false);
+        setLoading(false);
       }
     };
     fetchData();
-  }, [option]);
-
-  return {data, loading, error}
+  }, option);
+  
+  return { data, loading, error }
 }

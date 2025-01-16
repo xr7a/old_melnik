@@ -15,10 +15,8 @@ export class createPostDto {
 
 export class updatePostDto {
     @ApiProperty()
-    @IsString()
     title?: string;
 
     @ApiProperty()
-    @IsString()
     content?: string;
 }

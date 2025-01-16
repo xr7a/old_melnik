@@ -1,5 +1,6 @@
 import AuthPage from "@/components/pages/auth/AuthPage";
 import NewsPage from "@/components/pages/news/NewsPage";
+import { PostPage } from "@/components/pages/post";
 import { RouteObject } from "react-router-dom";
 
 export const publicRoutes: RouteObject[] = [
@@ -15,7 +16,7 @@ export const privateRoutes: RouteObject[] = [
         element: <NewsPage/>
     },
     {
-        path: '/posts/postId',
-        element: "123"
+        path: '/posts/:postId',
+        element: <PostPage/>
     }
 ]

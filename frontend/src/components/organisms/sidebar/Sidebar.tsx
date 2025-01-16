@@ -7,7 +7,7 @@ const Sidebar = () => {
   const { logout } = useAuth();
   const [value, setValue] = useState('posts');
   return (
-    <div className="flex flex-col justify-between mb-[7%] mt-[4%] ml-[17%] w-[10%]">
+    <div className="flex flex-col justify-between mb-[7%] mt-[2.5%] ml-[17%] w-[10%]">
       <div className="flex flex-col gap-2 w-full">
         <Link to="/" className="w-full">
           <Toggle

@@ -28,6 +28,7 @@ export class FilesService {
             filename,
             file.buffer,
             file.size,
+            { 'Content-Type': 'image/jpeg' }
         )
         return filename;
     }
