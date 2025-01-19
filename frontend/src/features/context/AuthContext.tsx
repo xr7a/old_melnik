@@ -12,9 +12,9 @@ interface IAuthContext {
   email: string;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: () => void;
+  login: (a: string, b: string) => void;
   logout: () => void;
-  register: () => void;
+  register: (a: string, b: string) => void;
 }
 
 interface IAuthProvider {
@@ -32,7 +32,11 @@ export const AuthContext = createContext<IAuthContext | undefined>(undefined);
 export const AuthProvider = ({ children }: IAuthProvider) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<IUser>({ id: 'someuuid', email: 'example@gmail.com', role: 'Reader'});
+  const [user, setUser] = useState<IUser>({
+    id: 'someuuid',
+    email: 'example@gmail.com',
+    role: 'Reader'
+  });
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -41,24 +45,47 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
       setUser({ id: decode.id, email: decode.email, role: decode.role });
     }
     setIsLoading(false);
-  }, [isAuthenticated]);
+  }, []);
 
-  const login = () => {
+  const login = (accessToken: string, refreshToken: string) => {
+    localStorage.setItem('token', accessToken);
+    localStorage.setItem('refresh', refreshToken);
+    
+    const decode = jwtDecode<IUser>(accessToken);
+    setUser({ id: decode.id, email: decode.email, role: decode.role });
+    
     setIsAuthenticated(true);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh');
+
     setIsAuthenticated(false);
   };
 
-  const register = () => {
+  const register = (accessToken: string, refreshToken: string) => {
+    localStorage.setItem('token', accessToken);
+    localStorage.setItem('refresh', refreshToken);
+
+    const decode = jwtDecode<IUser>(accessToken);
+    setUser({ id: decode.id, email: decode.email, role: decode.role });
+    
     setIsAuthenticated(true);
   };
 
   return (
-    <AuthContext.Provider value={{ userId: user.id, role: user.role, email: user.email, isAuthenticated, isLoading, login, logout, register }}>
+    <AuthContext.Provider
+      value={{
+        userId: user.id,
+        role: user.role,
+        email: user.email,
+        isAuthenticated,
+        isLoading,
+        login,
+        logout,
+        register
+      }}>
       {children}
     </AuthContext.Provider>
   );

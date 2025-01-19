@@ -18,7 +18,7 @@ export const InfiniteScroll = ({
   setPage,
   changeDraftPostsByPublish,
   changeDraftPostsByUpdate,
-  likePost
+  likePost,
 }: InfiniteScrollProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -41,10 +41,10 @@ export const InfiniteScroll = ({
         container.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [ref, loading]);
+  }, [loading]);
 
   return (
-    <div className="h-[70vh] w-full overflow-auto scrollbar-none" ref={ref}>
+    <div ref={ref} className="w-full flex-1 overflow-y-auto scrollbar-none h-full">
       {posts.map((post) => (
         <PostCard
           key={post.id}

@@ -82,16 +82,21 @@ export const PostCard = ({
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div>
-          <Typography type="p2">{typeof data === 'string' ? data : JSON.stringify(data)}</Typography>
+          <Typography type="p2">
+            {typeof data === 'string' ? data : JSON.stringify(data)}
+          </Typography>
           <Typography type="p3">{date}</Typography>
         </div>
       </div>
 
       <Typography type="h2">{post.title}</Typography>
       {post.image != null && (
-        <img src={post.image.imageUrl} className="max-h-[400px] rounded-[6px] w-auto object-contain bg-slate-300" />
+        <img
+          src={post.image.imageUrl}
+          className="max-h-[400px] rounded-[6px] w-auto object-contain bg-slate-300"
+        />
       )}
-    
+
       <Typography type="p2">{post.content}</Typography>
 
       {post.status === 'Draft' && (

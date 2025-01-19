@@ -36,10 +36,10 @@ export function LoginForm({ setRegister }: ILoginProps) {
       password: ''
     }
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    AuthService.login({ email: values.email, password: values.password });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const data = await AuthService.login({ email: values.email, password: values.password });
     console.log("email in login", email);
-    login();
+    login(data.accessToken, data.refreshToken);
     navigate('/');
   }
   return (

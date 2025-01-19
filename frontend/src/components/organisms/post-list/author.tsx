@@ -1,14 +1,12 @@
 import { Card } from '@/components/atoms/ui/card';
 import { Skeleton } from '@/components/atoms/ui/skeleton';
-import { CreatePost, Post, PostService, UpdatePost } from '@/features/api/services/post.service';
-import { useFetch } from '@/hooks/useFetch';
+import { Post, PostService, UpdatePost } from '@/features/api/services/post.service';
 import { useEffect, useState } from 'react';
 import { InfiniteScroll } from '../infinite-scroll';
 import { Toggle } from '@/components/atoms/ui/toggle';
-import { Button } from '@/components/atoms/ui/button';
 import { CreatePostDialog } from '@/components/molecules/create-post-card';
-import { Like } from '@/features/api/services/interaction.service';
 import { useAuth } from '@/features/context/AuthContext';
+import { useFetch } from '@/hooks/useFetch';
 
 export function PostListAuthor() {
   const [postType, setPostType] = useState('published');
@@ -22,7 +20,6 @@ export function PostListAuthor() {
     }
   };
 
-  // функция «лайк/анлайк»
   const LikePost = (id: string, isLiked: boolean) => {
     setPosts((prevPosts) =>
       prevPosts.map((post) => {
@@ -30,10 +27,8 @@ export function PostListAuthor() {
           return {
             ...post,
             likes: isLiked
-              ? // Убираем лайк
-                post.likes.filter((like) => like.userId !== userId)
-              : // Добавляем лайк
-                [
+              ? post.likes.filter((like) => like.userId !== userId)
+              : [
                   ...post.likes,
                   {
                     id: crypto.randomUUID(),
@@ -55,19 +50,18 @@ export function PostListAuthor() {
           post.id === id
             ? {
                 ...post,
-                title: data.title ? data.title : post.title,
-                content: data.content ? data.content : post.content,
+                title: data.title || post.title,
+                content: data.content || post.content,
                 image: data.image
                   ? {
-                      id: data.image.id, // Укажите или получите корректный `id` изображения
+                      id: data.image.id,
                       imageUrl: data.image.imageUrl
                     }
-                  : null // Если изображения нет
+                  : null
               }
             : post
         )
       );
-      console.log(posts)
     }
   };
 
@@ -89,7 +83,11 @@ export function PostListAuthor() {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      setPosts((prevPosts) => [...prevPosts, ...data]);
+      setPosts((prevPosts) => {
+        const existingIds = new Set(prevPosts.map((post) => post.id));
+        const newPosts = data.filter((post) => !existingIds.has(post.id));
+        return [...prevPosts, ...newPosts];
+      });
     }
   }, [data]);
 
@@ -112,12 +110,12 @@ export function PostListAuthor() {
   }
 
   if (error) {
-    return <Card className="w-full flex justify-center  h-[30%] items-center">error</Card>;
+    return <Card className="w-full flex justify-center h-[30%] items-center">Ошибка</Card>;
   }
 
   return (
-    <div>
-      <Card className="flex w-[40%] mb-[32px]">
+    <div className="h-[80vh]">
+      <Card className="flex flex-0 w-[40%] mb-[32px]">
         <Toggle
           className="w-full"
           pressed={postType === 'published'}

@@ -46,14 +46,14 @@ export function RegisterForm({ setRegister }: IRegisterProps) {
       role: 'Reader'
     }
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const user: RegisterData = {
       email: values.email,
       password: values.password,
       role: values.role
     };
-    AuthService.register(user);
-    register();
+    const data = await AuthService.register(user);
+    register(data.accessToken, data.refreshToken);
     navigate('/');
   }
   return (

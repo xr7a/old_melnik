@@ -1,4 +1,4 @@
-import { Token } from '@/features/context/AuthContext';
+import { Token, useAuth } from '@/features/context/AuthContext';
 import axios from 'axios'
 
 export interface RegisterData {
@@ -17,8 +17,7 @@ export class AuthService {
     static async register(user: RegisterData) {
         try {
             const response = await axios.post<Token>('http://localhost:3000/auth/register', user);
-            localStorage.setItem("token", response.data.accessToken);
-            localStorage.setItem("refresh", response.data.refreshToken);
+            return response.data
         }
         catch (error) {
             if (error instanceof Error) {
@@ -32,8 +31,7 @@ export class AuthService {
     static async login(user: LoginData) {
         try {
             const response = await axios.post<Token>('http://localhost:3000/auth/login', user);
-            localStorage.setItem("token", response.data.accessToken);
-            localStorage.setItem("refresh", response.data.refreshToken);
+            return response.data;
         }
         catch (error) {
             if (error instanceof Error) {
