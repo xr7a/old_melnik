@@ -18,33 +18,22 @@ export const InfiniteScroll = ({
   setPage,
   changeDraftPostsByPublish,
   changeDraftPostsByUpdate,
-  likePost,
+  likePost
 }: InfiniteScrollProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
-
-  const handleScroll = () => {
-    const container = ref.current;
-    if (
-      container &&
-      container.scrollHeight - container.scrollTop <= container.clientHeight + 1 &&
-      !loading
-    ) {
-      setPage();
-    }
-  };
-
+  const observer = useRef<IntersectionObserver | null>();
   useEffect(() => {
-    const container = ref.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => {
-        container.removeEventListener('scroll', handleScroll);
-      };
-    }
-  }, [loading]);
+    var callback = function (entries: { isIntersecting: any; }[], observer: any) {
+      if(entries[0].isIntersecting){
+        setPage()
+      }
+    };
+    observer.current = new IntersectionObserver(callback);
+    observer.current.observe(ref.current!);
+  }, []);
 
   return (
-    <div ref={ref} className="w-full flex-1 overflow-y-auto scrollbar-none h-full">
+    <div className="w-full flex-1 overflow-y-auto scrollbar-none h-full">
       {posts.map((post) => (
         <PostCard
           key={post.id}
@@ -54,6 +43,7 @@ export const InfiniteScroll = ({
           likePost={likePost}
         />
       ))}
+      <div className="h-5 w-1" ref={ref}></div>
       {loading && <Skeleton className="h-[400px] w-full flex justify-center mt-[32px]" />}
     </div>
   );
